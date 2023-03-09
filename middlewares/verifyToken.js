@@ -15,12 +15,17 @@ const verifyToken = async (req, res, next) => {
         }
         else {
             req.user = decoded
-          
             next();
         }
     })
 }
 
+const permitAdminOnly = async (req, res, next) => {
+    if (req.user.user_role != 'admin') {
+        res.status(401).send({ error: "Only admin is permitted" })
+    }
+    next()
+}
 
-module.exports = verifyToken
+module.exports = { verifyToken, permitAdminOnly }
 

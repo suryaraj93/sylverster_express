@@ -16,13 +16,13 @@ const transporter = nodemailer.createTransport({
 
 
 
-const mailData = (to_mail) => {
+const mailData = (to_mail,product) => {
     const a = {
         from: ADMIN_EMAIL,  // sender address
         to: to_mail,   // list of receivers
         subject: 'Sending Email using Node.js',
         text: 'That was easy!',
-        html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer<br/>',
+        html: "<b>Hey there! </b><br> Your product "+product+" is created<br/>",
     };
     return a
 }
