@@ -1,9 +1,13 @@
+//imports
 const userController = require('../controllers/userController')
-const verifyToken = require('../middlewares/verifyToken')
+const { verifyToken, permitAdminOnly } = require('../middlewares/verifyToken')
 const userRouter = require('express').Router()
+const fileStorage = require('../middlewares/fileUpload')
 
-userRouter.get('/userList', verifyToken, userController.getAllUsers)
-userRouter.post('/createUser', userController.createUser)
-userRouter.post('/signIn', userController.signIn)
+//user urls
+userRouter.get('/user-list', verifyToken, permitAdminOnly, userController.getAllUsers)
+userRouter.post('/create-user', fileStorage.single('image'), userController.createUser)
+userRouter.post('/sign-in', userController.signIn)
 
+//exports
 module.exports = userRouter
