@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/dbConfig');
 //create a sequelize model for Review
-const Product = require('./productModel')
+const {Product} = require('./productModel')
 const Review = sequelize.define('review', {
     id: {
         type: DataTypes.INTEGER,

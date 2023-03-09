@@ -1,6 +1,8 @@
+//require
 const { DataTypes } = require('sequelize')
 const sequelize = require('../config/dbConfig')
 
+//table
 const User = sequelize.define('user', {
     id: {
         type: DataTypes.INTEGER,
@@ -33,17 +35,17 @@ const User = sequelize.define('user', {
     },
 }, { tableName: 'users' })
 
+//relation
 User.associate = function (models) {
     User.hasMany(models.AuthToken);
 
 }
 
+//sync
 sequelize.sync(
-    { 
-        force: false
-     })
+    { force: false })
     .then(() => { console.log('yes re-sync done in user model!') }
     )
 
-
+//exports
 module.exports = User
