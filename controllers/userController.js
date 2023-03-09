@@ -18,7 +18,12 @@ const getAllUsers = async (req, res) => {
 
 
 const createUser = async (req, res) => {
-    const { username, email, password ,user_role} = req.body
+    let imageUrl = req.file?.path ?? ""
+
+    const { username, email, password, user_role } = req.body
+    console.log('username', imageUrl)
+    req.body.image = imageUrl
+
     let validate = createUserValidator.validate(req.body)
 
     if (validate.error) {
@@ -28,13 +33,12 @@ const createUser = async (req, res) => {
         try {
             const existingUser = await User.findOne({ where: { email: email } })
             if (existingUser) {
-
                 return res.status(400).json({ message: 'user already exists' })
             }
             const hashedPassword = await bcrypt.hash(password, 10)
 
             const result = await User.create({
-                email: email, username: username, password: hashedPassword,user_role:user_role
+                email: email, username: username, password: hashedPassword, user_role: user_role, image: imageUrl
             })
 
             const token = jwt.sign({ email: result.email, id: result.id }, SECRET_KEY);
@@ -70,7 +74,7 @@ const signIn = async (req, res) => {
             if (!matchPassword) {
                 return res.status(400).json({ message: "Invalid credentials" })
             }
-            const token = jwt.sign({ email: existingUser.email, id: existingUser.id }, SECRET_KEY);
+            const token = jwt.sign({ email: existingUser.email, id: existingUser.id, user_role: existingUser.user_role }, SECRET_KEY);
 
             res.status(200).json({ user: existingUser, token: token })
         } catch (error) {

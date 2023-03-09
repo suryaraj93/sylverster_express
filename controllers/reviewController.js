@@ -14,24 +14,27 @@ const getAllReviews = async (_req, res) => {
 }
 
 const addReview = async (req, res) => {
- 
-
-    let info = {
-        productId: req.body.productId,
-        rating: req.body.rating,
-        description: req.body.description,
+    if (req.user.user_role != 'customer' || req.user.user_role != 'admin') {
+        res.status(404).send({ message: "only customer and admin can add a review." })
     }
-    const review = await Review.create(info)
-    let mail_data = reviewMailData(req.user.email)
-    transporter.sendMail(mail_data, function (err, info) {
-        if (err)
-            console.log(err)
-        else
-            console.log(info);
-    });
-  
-    res.status(200).send(review)
+    else {
+        let info = {
+            productId: req.body.productId,
+            rating: req.body.rating,
+            description: req.body.description,
+        }
+        const review = await Review.create(info)
+        let mail_data = reviewMailData(req.user.email)
+        transporter.sendMail(mail_data, function (err, info) {
+            if (err)
+                console.log(err)
+            else
+                console.log(info);
+        });
 
+        res.status(200).send(review)
+
+    }
 }
 
 const singleReview = async (req, res) => {
